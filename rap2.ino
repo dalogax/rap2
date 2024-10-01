@@ -4,14 +4,16 @@ const int pwma = 10;
 const int bin1 = 14;
 const int bin2 = 15;
 const int pwmb = 5;
+const int led = 17;
 const int button = 2;
-const float Kp = 1.0;
+const float Kp = 2.0;
 const float Ki = 0.0;
-const float Kd = 0.0;
+const float Kd = 1.0;
 const int irPins[8] = {9, 8, 7, A0, A1, 6, A2, A3};
 const int weights[8] = {-64, -32, -16, -8, 8, 16, 32, 64};
-const int speed = 120;         //[0-255]
+const int speed = 25;          //[0-255]
 const int motorDerivative = 0; // -100 (right) to 100 (left)
+const float correctionFactor = 3.0;
 
 float normalizedValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int irSensor[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -27,6 +29,7 @@ void setup()
 {
   Serial.begin(9600);
   pinMode(button, INPUT);
+  pinMode(led, OUTPUT);
   for (int i = 0; i < 8; i++)
   {
     pinMode(irPins[i], INPUT);
@@ -57,8 +60,13 @@ void loop()
 
   if (calibrated && !motorStop)
   {
+    digitalWrite(led, LOW);
     calculatePosition();
     updateMotors();
+  }
+  else
+  {
+    digitalWrite(led, HIGH);
   }
 }
 
@@ -108,7 +116,7 @@ void updateMotors()
   float I = Ki * integral;
   float derivative = error - lastError;
   float D = Kd * derivative;
-  float correction = P + I + D;
+  float correction = (P + I + D) * correctionFactor;
   int leftSpeed = constrain(255 - correction, -255, 255);
   int rightSpeed = constrain(255 + correction, -255, 255);
   drive(leftSpeed, rightSpeed);
@@ -141,8 +149,16 @@ void calibrate()
     Serial.println("Starting calibration");
   }
   unsigned long startTime = millis();
+  unsigned long blinkTime = millis();
+  bool ledState = false;
   while (millis() - startTime < 10000)
   {
+    if (millis() - blinkTime >= 500)
+    {
+      ledState = !ledState;
+      digitalWrite(led, ledState);
+      blinkTime = millis();
+    }
     for (int i = 0; i < 8; i++)
     {
       irSensor[i] = analogRead(irPins[i]);
