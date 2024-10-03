@@ -6,14 +6,14 @@ const int bin2 = 15;
 const int pwmb = 5;
 const int led = 17;
 const int button = 2;
-const float Kp = 2.0;
+const float Kp = 4.0;
 const float Ki = 0.0;
-const float Kd = 1.0;
+const float Kd = 2.0;
 const int irPins[8] = {9, 8, 7, A0, A1, 6, A2, A3};
 const int weights[8] = {-64, -32, -16, -8, 8, 16, 32, 64};
-const int speed = 25;          //[0-255]
+const int speed = 75;          //[0-255]
 const int motorDerivative = 0; // -100 (right) to 100 (left)
-const float correctionFactor = 3.0;
+const float correctionFactor = 8.0;
 
 float normalizedValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int irSensor[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -117,8 +117,8 @@ void updateMotors()
   float derivative = error - lastError;
   float D = Kd * derivative;
   float correction = (P + I + D) * correctionFactor;
-  int leftSpeed = constrain(255 - correction, -255, 255);
-  int rightSpeed = constrain(255 + correction, -255, 255);
+  int leftSpeed = constrain(255 + correction, -255, 255);
+  int rightSpeed = constrain(255 - correction, -255, 255);
   drive(leftSpeed, rightSpeed);
 
   if (Serial)
@@ -195,12 +195,12 @@ void drive(int speedl, int speedr)
 {
   if (speedl != 0)
   {
-    speedl = constrain(speedl + motorDerivative, -speed, speed);
+    speedl = constrain(speedl + motorDerivative, 0, speed);
   }
 
   if (speedr != 0)
   {
-    speedr = constrain(speedr - motorDerivative, -speed, speed);
+    speedr = constrain(speedr - motorDerivative, 0, speed);
   }
 
   digitalWrite(ain1, speedl >= 0);
