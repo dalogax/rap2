@@ -1,3 +1,4 @@
+// System constants
 const int ain1 = 7;
 const int ain2 = 16;
 const int pwma = 10;
@@ -6,15 +7,18 @@ const int bin2 = 15;
 const int pwmb = 5;
 const int led = 17;
 const int button = 2;
-const float Kp = 4.0;
-const float Ki = 0.0;
-const float Kd = 2.0;
 const int irPins[8] = {9, 8, 7, A0, A1, 6, A2, A3};
-const int weights[8] = {-64, -32, -16, -8, 8, 16, 32, 64};
-const int speed = 75;          //[0-255]
+
+// Calibration constants
+const int weights[8] = {-128, -64, -8, -2, 2, 8, 64, 128};
+const float Kp = 8.0;
+const float Ki = 0.0;
+const float Kd = 8.0;
+const int speed = 100; //[0-255]
 const int motorDerivative = 0; // -100 (right) to 100 (left)
 const float correctionFactor = 8.0;
 
+// Runtime variables
 float normalizedValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int irSensor[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int calibrationMin[8] = {1023, 1023, 1023, 1023, 1023, 1023, 1023, 1023};
