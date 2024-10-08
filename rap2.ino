@@ -10,13 +10,13 @@ const int button = 2;
 const int irPins[8] = {9, 8, 7, A0, A1, 6, A2, A3};
 
 // Calibration constants
-const int weights[8] = {-128, -64, -8, -2, 2, 8, 64, 128};
-const float Kp = 8.0;
+const int weights[8] = {-64, -32, -16, -4, 4, 16, 32, 64};
+const float Kp = 10.0;
 const float Ki = 0.0;
-const float Kd = 8.0;
-const int speed = 100;         //[0-255]
+const float Kd = 26.0;
+const int speed = 128;         //[0-255]
 const int motorDerivative = 0; // -100 (right) to 100 (left)
-const float correctionFactor = 8.0;
+const float correctionFactor = 2.0;
 
 // Runtime variables
 float normalizedValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -48,6 +48,8 @@ void loop()
     if (!calibrated)
     {
       calibrate();
+      motorStop = true;
+      drive(0, 0);
     }
     else if (!motorStop)
     {
