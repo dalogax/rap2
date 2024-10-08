@@ -1,6 +1,6 @@
 # Rap2
 
-Rap2 is a line-following robot that is based on the [Raptor](https://github.com/felixstdp/raptor) v2.0, originally designed by [felixstdp](https://bricolabs.cc/wiki/user/felixstdp).
+Rap2 is a line-following robot that is based on the [Raptor](https://github.com/felixstdp/raptor) v2.0, originally designed by [felixstdp](https://bricolabs.cc/wiki/user/felixstdp) and [salvari](https://github.com/salvari).
 
 In terms of hardware, Rap2 is an exact clone of the original Raptor. However, it opts for more cost-effective components rather than high-end ones.
 
